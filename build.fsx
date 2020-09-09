@@ -54,7 +54,7 @@ let numericsFSharpStrongNameNuGetPackage = nugetPackage "MathNet.Numerics.FSharp
 
 let numericsProject = project "MathNet.Numerics" "src/Numerics/Numerics.csproj" [numericsNuGetPackage; numericsStrongNameNuGetPackage]
 let numericsFsharpProject = project "MathNet.Numerics.FSharp" "src/FSharp/FSharp.fsproj" [numericsFSharpNuGetPackage; numericsFSharpStrongNameNuGetPackage]
-let numericsSolution = solution "Numerics" "MathNet.Numerics.sln" [numericsProject; numericsFsharpProject] [numericsZipPackage; numericsStrongNameZipPackage]
+let numericsSolution = solution "Numerics" "MathNet.Numerics.sln" [numericsProject] [numericsZipPackage; numericsStrongNameZipPackage]
 
 
 // DATA EXTENSION PACKAGES
@@ -323,19 +323,8 @@ Target "TestNumericsNET47"  (fun _ -> testNumerics "net47")
 "Build" =?> ("TestNumericsNET45", isWindows)
 "Build" =?> ("TestNumericsNET461", isWindows) ==> "TestNumerics"
 "Build" =?> ("TestNumericsNET47", isWindows)
-let testFsharp framework = test "src/FSharp.Tests" "FSharp.Tests.fsproj" framework
-Target "TestFsharp" DoNothing
-Target "TestFsharpCore3.1" (fun _ -> testFsharp "netcoreapp3.1")
-Target "TestFsharpNET45" (fun _ -> testFsharp "net45")
-Target "TestFsharpNET461" (fun _ -> testFsharp "net461")
-Target "TestFsharpNET47" (fun _ -> testFsharp "net47")
-"Build" ==> "TestFsharpCore3.1" ==> "TestFsharp"
-"Build" =?> ("TestFsharpNET45", isWindows)
-"Build" =?> ("TestFsharpNET461", isWindows) ==> "TestFsharp"
-"Build" =?> ("TestFsharpNET47", isWindows)
 Target "Test" DoNothing
 "TestNumerics" ==> "Test"
-"TestFsharp" ==> "Test"
 
 let testMKL framework = test "src/Numerics.Tests" "Numerics.Tests.MKL.csproj" framework
 Target "MklTest" DoNothing
