@@ -98,69 +98,6 @@ namespace MathNet.Numerics.LinearAlgebra.Double
     }
 }
 
-namespace MathNet.Numerics.LinearAlgebra.Single
-{
-    internal class MatrixBuilder : MatrixBuilder<float>
-    {
-        public override float Zero => 0f;
-
-        public override float One => 1f;
-
-        public override Matrix<float> Dense(DenseColumnMajorMatrixStorage<float> storage)
-        {
-            return new DenseMatrix(storage);
-        }
-
-        public override Matrix<float> Sparse(SparseCompressedRowMatrixStorage<float> storage)
-        {
-            return new SparseMatrix(storage);
-        }
-
-        public override Matrix<float> Diagonal(DiagonalMatrixStorage<float> storage)
-        {
-            return new DiagonalMatrix(storage);
-        }
-
-        public override Matrix<float> Random(int rows, int columns, IContinuousDistribution distribution)
-        {
-            return Dense(rows, columns, Generate.RandomSingle(rows*columns, distribution));
-        }
-
-        public override IIterationStopCriterion<float>[] IterativeSolverStopCriteria(int maxIterations = 1000)
-        {
-            return new IIterationStopCriterion<float>[]
-            {
-                new FailureStopCriterion<float>(),
-                new DivergenceStopCriterion<float>(),
-                new IterationCountStopCriterion<float>(maxIterations),
-                new ResidualStopCriterion<float>(1e-6)
-            };
-        }
-    }
-
-    internal class VectorBuilder : VectorBuilder<float>
-    {
-        public override float Zero => 0f;
-
-        public override float One => 1f;
-
-        public override Vector<float> Dense(DenseVectorStorage<float> storage)
-        {
-            return new DenseVector(storage);
-        }
-
-        public override Vector<float> Sparse(SparseVectorStorage<float> storage)
-        {
-            return new SparseVector(storage);
-        }
-
-        public override Vector<float> Random(int length, IContinuousDistribution distribution)
-        {
-            return Dense(Generate.RandomSingle(length, distribution));
-        }
-    }
-}
-
 namespace MathNet.Numerics.LinearAlgebra.Complex
 {
     using Complex = System.Numerics.Complex;
@@ -1468,13 +1405,6 @@ namespace MathNet.Numerics.LinearAlgebra
                 return new Tuple<MatrixBuilder<T>, VectorBuilder<T>>(
                     (MatrixBuilder<T>)(object)new Double.MatrixBuilder(),
                     (VectorBuilder<T>)(object)new Double.VectorBuilder());
-            }
-
-            if (typeof (T) == typeof (float))
-            {
-                return new Tuple<MatrixBuilder<T>, VectorBuilder<T>>(
-                    (MatrixBuilder<T>)(object)new Single.MatrixBuilder(),
-                    (VectorBuilder<T>)(object)new Single.VectorBuilder());
             }
 
             throw new NotSupportedException(FormattableString.Invariant($"Matrices and vectors of type '{typeof(T).Name}' are not supported. Only Double, Single, Complex or Complex32 are supported at this point."));
