@@ -167,7 +167,6 @@ Target "Clean" (fun _ ->
 
 Target "ApplyVersion" (fun _ ->
     allProjects |> List.iter patchVersionInProjectFile
-    patchVersionInAssemblyInfo "src/TestData" numericsRelease
     patchVersionInAssemblyInfo "src/Numerics.Tests" numericsRelease)
 
 Target "Restore" (fun _ -> allSolutions |> List.iter restoreWeak)
@@ -251,7 +250,6 @@ Target "DataBuild" (fun _ ->
     if isWindows && hasBuildParam "sign" then signNuGet fingerprint timeserver [dataSolution]
 
     )
-"Prepare" ==> "DataBuild"
 
 Target "MklWinBuild" (fun _ ->
 
