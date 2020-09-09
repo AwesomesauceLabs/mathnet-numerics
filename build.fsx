@@ -149,7 +149,7 @@ let openBlasWinPack =
 
 // ALL
 
-let allSolutions = [numericsSolution; dataSolution]
+let allSolutions = [numericsSolution]
 let allProjects = allSolutions |> List.collect (fun s -> s.Projects) |> List.distinct
 
 
