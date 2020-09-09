@@ -226,69 +226,6 @@ namespace MathNet.Numerics.LinearAlgebra.Complex
     }
 }
 
-namespace MathNet.Numerics.LinearAlgebra.Complex32
-{
-    internal class MatrixBuilder : MatrixBuilder<Numerics.Complex32>
-    {
-        public override Numerics.Complex32 Zero => Numerics.Complex32.Zero;
-
-        public override Numerics.Complex32 One => Numerics.Complex32.One;
-
-        public override Matrix<Numerics.Complex32> Dense(DenseColumnMajorMatrixStorage<Numerics.Complex32> storage)
-        {
-            return new DenseMatrix(storage);
-        }
-
-        public override Matrix<Numerics.Complex32> Sparse(SparseCompressedRowMatrixStorage<Numerics.Complex32> storage)
-        {
-            return new SparseMatrix(storage);
-        }
-
-        public override Matrix<Numerics.Complex32> Diagonal(DiagonalMatrixStorage<Numerics.Complex32> storage)
-        {
-            return new DiagonalMatrix(storage);
-        }
-
-        public override Matrix<Numerics.Complex32> Random(int rows, int columns, IContinuousDistribution distribution)
-        {
-            return Dense(rows, columns, Generate.RandomComplex32(rows*columns, distribution));
-        }
-
-        public override IIterationStopCriterion<Numerics.Complex32>[] IterativeSolverStopCriteria(int maxIterations = 1000)
-        {
-            return new IIterationStopCriterion<Numerics.Complex32>[]
-            {
-                new FailureStopCriterion<Numerics.Complex32>(),
-                new DivergenceStopCriterion<Numerics.Complex32>(),
-                new IterationCountStopCriterion<Numerics.Complex32>(maxIterations),
-                new ResidualStopCriterion<Numerics.Complex32>(1e-6)
-            };
-        }
-    }
-
-    internal class VectorBuilder : VectorBuilder<Numerics.Complex32>
-    {
-        public override Numerics.Complex32 Zero => Numerics.Complex32.Zero;
-
-        public override Numerics.Complex32 One => Numerics.Complex32.One;
-
-        public override Vector<Numerics.Complex32> Dense(DenseVectorStorage<Numerics.Complex32> storage)
-        {
-            return new DenseVector(storage);
-        }
-
-        public override Vector<Numerics.Complex32> Sparse(SparseVectorStorage<Numerics.Complex32> storage)
-        {
-            return new SparseVector(storage);
-        }
-
-        public override Vector<Numerics.Complex32> Random(int length, IContinuousDistribution distribution)
-        {
-            return Dense(Generate.RandomComplex32(length, distribution));
-        }
-    }
-}
-
 namespace MathNet.Numerics.LinearAlgebra
 {
     /// <summary>
@@ -1524,13 +1461,6 @@ namespace MathNet.Numerics.LinearAlgebra
                 return new Tuple<MatrixBuilder<T>, VectorBuilder<T>>(
                     (MatrixBuilder<T>)(object)new LinearAlgebra.Complex.MatrixBuilder(),
                     (VectorBuilder<T>)(object)new LinearAlgebra.Complex.VectorBuilder());
-            }
-
-            if (typeof (T) == typeof (Numerics.Complex32))
-            {
-                return new Tuple<MatrixBuilder<T>, VectorBuilder<T>>(
-                    (MatrixBuilder<T>)(object)new Complex32.MatrixBuilder(),
-                    (VectorBuilder<T>)(object)new Complex32.VectorBuilder());
             }
 
             if (typeof (T) == typeof (double))
