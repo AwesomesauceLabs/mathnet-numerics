@@ -38,7 +38,7 @@ let mklRelease = release "numerics" "MKL Provider" "RELEASENOTES-MKL.md"
 let cudaRelease = release "numerics" "CUDA Provider" "RELEASENOTES-CUDA.md"
 let openBlasRelease = release "numerics" "OpenBLAS Provider" "RELEASENOTES-OpenBLAS.md"
 let dataRelease = release "numerics" "Data Extensions" "RELEASENOTES-Data.md"
-let releases = [ numericsRelease; mklRelease; openBlasRelease; dataRelease ] // skip cuda
+let releases = [ numericsRelease ] // skip cuda
 traceHeader releases
 
 
@@ -167,14 +167,8 @@ Target "Clean" (fun _ ->
 
 Target "ApplyVersion" (fun _ ->
     allProjects |> List.iter patchVersionInProjectFile
-    patchVersionInAssemblyInfo "src/FSharp" numericsRelease
     patchVersionInAssemblyInfo "src/TestData" numericsRelease
-    patchVersionInAssemblyInfo "src/Numerics.Tests" numericsRelease
-    patchVersionInAssemblyInfo "src/FSharp.Tests" numericsRelease
-    patchVersionInAssemblyInfo "src/Data.Tests" dataRelease
-    patchVersionInResource "src/NativeProviders/MKL/resource.rc" mklRelease
-    patchVersionInResource "src/NativeProviders/CUDA/resource.rc" cudaRelease
-    patchVersionInResource "src/NativeProviders/OpenBLAS/resource.rc" openBlasRelease)
+    patchVersionInAssemblyInfo "src/Numerics.Tests" numericsRelease)
 
 Target "Restore" (fun _ -> allSolutions |> List.iter restoreWeak)
 "Start"
@@ -273,7 +267,6 @@ Target "MklWinBuild" (fun _ ->
     if isWindows && hasBuildParam "sign" then signNuGet fingerprint timeserver [mklSolution]
 
     )
-"Prepare" ==> "MklWinBuild"
 
 Target "CudaWinBuild" (fun _ ->
 
@@ -288,7 +281,6 @@ Target "CudaWinBuild" (fun _ ->
     if isWindows && hasBuildParam "sign" then signNuGet fingerprint timeserver [cudaSolution]
 
     )
-"Prepare" ==> "CudaWinBuild"
 
 Target "OpenBlasWinBuild" (fun _ ->
 
@@ -304,7 +296,6 @@ Target "OpenBlasWinBuild" (fun _ ->
     if isWindows && hasBuildParam "sign" then signNuGet fingerprint timeserver [openBlasSolution]
 
     )
-"Prepare" ==> "OpenBlasWinBuild"
 
 
 // --------------------------------------------------------------------------------------
@@ -476,17 +467,5 @@ Dependencies "OpenBlasPublish" [ "OpenBlasPublishTag"; "PublishDocs"; "OpenBlasP
 
 Target "All" DoNothing
 Dependencies "All" [ "Build"; "Docs"; "Api"; "Test" ]
-
-Target "DataAll" DoNothing
-Dependencies "DataAll" [ "DataBuild"; "DataTest" ]
-
-Target "MklWinAll" DoNothing
-Dependencies "MklWinAll" [ "MklWinBuild"; "MklTest" ]
-
-Target "CudaWinAll" DoNothing
-Dependencies "CudaWinAll" [ "CudaWinBuild"; "CudaTest" ]
-
-Target "OpenBlasWinAll" DoNothing
-Dependencies "OpenBlasWinAll" [ "OpenBlasWinBuild"; "OpenBlasTest" ]
 
 RunTargetOrDefault "Test"
