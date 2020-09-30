@@ -21,7 +21,12 @@ namespace MathNet.Numerics.UnitTests
             b[0] = 3;
             b[1] = -6;
 
-            var x = A.Solve(b);
+            // Note: We use the LU-based `Solve` method here
+            // to reduce our dependency on other MathNet.Numerics
+            // code. We know that we can LU factorization here
+            // because our matrix A is square.
+
+            var x = A.LU().Solve(b);
 
             TestContext.WriteLine("x: {0}", x);
         }
