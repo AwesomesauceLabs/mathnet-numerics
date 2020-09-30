@@ -7,7 +7,6 @@ using Complex = System.Numerics.Complex;
 using System.Text;
 using MathNet.Numerics.LinearAlgebra;
 using MathNet.Numerics.LinearAlgebra.Double;
-using MathNet.Numerics.LinearRegression;
 using MathNet.Numerics.LinearAlgebra.Factorization;
 
 #if !NETSTANDARD1_3
@@ -112,15 +111,6 @@ namespace MathNet.Numerics
         }
 
         public static Polynomial Zero => new Polynomial();
-
-        /// <summary>
-        /// Least-Squares fitting the points (x,y) to a k-order polynomial y : x -> p0 + p1*x + p2*x^2 + ... + pk*x^k
-        /// </summary>
-        public static Polynomial Fit(double[] x, double[] y, int order, DirectRegressionMethod method = DirectRegressionMethod.QR)
-        {
-            var coefficients = Numerics.Fit.Polynomial(x, y, order, method);
-            return new Polynomial(coefficients);
-        }
 
         static int EvaluateDegree(double[] coefficients)
         {
