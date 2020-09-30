@@ -86,31 +86,6 @@ namespace MathNet.Numerics.Providers.FourierTransform
             Provider = CreateManaged();
         }
 
-#if NATIVE
-        public static IFourierTransformProvider CreateNativeMKL()
-        {
-            return new Mkl.MklFourierTransformProvider(GetCombinedHintPath());
-        }
-
-        public static void UseNativeMKL()
-        {
-            Provider = CreateNativeMKL();
-        }
-
-        public static bool TryUseNativeMKL()
-        {
-            return TryUse(CreateNativeMKL());
-        }
-
-        /// <summary>
-        /// Try to use a native provider, if available.
-        /// </summary>
-        public static bool TryUseNative()
-        {
-            return TryUseNativeMKL();
-        }
-#endif
-
         static bool TryUse(IFourierTransformProvider provider)
         {
             try
@@ -135,14 +110,7 @@ namespace MathNet.Numerics.Providers.FourierTransform
         /// </summary>
         public static void UseBest()
         {
-#if NATIVE
-            if (!TryUseNative())
-            {
-                UseManaged();
-            }
-#else
             UseManaged();
-#endif
         }
 
         /// <summary>
@@ -152,22 +120,7 @@ namespace MathNet.Numerics.Providers.FourierTransform
         /// </summary>
         public static void UseDefault()
         {
-#if NATIVE
-            var value = Environment.GetEnvironmentVariable(EnvVarFFTProvider);
-            switch (value != null ? value.ToUpperInvariant() : string.Empty)
-            {
-
-                case "MKL":
-                    UseNativeMKL();
-                    break;
-
-                default:
-                    UseBest();
-                    break;
-            }
-#else
-            UseBest();
-#endif
+           UseBest();
         }
 
         public static void FreeResources()

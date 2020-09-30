@@ -97,73 +97,6 @@ namespace MathNet.Numerics.Providers.LinearAlgebra
             Provider = CreateManagedReference();
         }
 
-#if NATIVE
-        [CLSCompliant(false)]
-        public static ILinearAlgebraProvider CreateNativeMKL(
-            Common.Mkl.MklConsistency consistency = Common.Mkl.MklConsistency.Auto,
-            Common.Mkl.MklPrecision precision = Common.Mkl.MklPrecision.Double,
-            Common.Mkl.MklAccuracy accuracy = Common.Mkl.MklAccuracy.High)
-        {
-            return new Mkl.MklLinearAlgebraProvider(GetCombinedHintPath(), consistency, precision, accuracy);
-        }
-
-        [CLSCompliant(false)]
-        public static void UseNativeMKL(
-            Common.Mkl.MklConsistency consistency = Common.Mkl.MklConsistency.Auto,
-            Common.Mkl.MklPrecision precision = Common.Mkl.MklPrecision.Double,
-            Common.Mkl.MklAccuracy accuracy = Common.Mkl.MklAccuracy.High)
-        {
-            Provider = CreateNativeMKL(consistency, precision, accuracy);
-        }
-
-        [CLSCompliant(false)]
-        public static bool TryUseNativeMKL(
-            Common.Mkl.MklConsistency consistency = Common.Mkl.MklConsistency.Auto,
-            Common.Mkl.MklPrecision precision = Common.Mkl.MklPrecision.Double,
-            Common.Mkl.MklAccuracy accuracy = Common.Mkl.MklAccuracy.High)
-        {
-            return TryUse(CreateNativeMKL(consistency, precision, accuracy));
-        }
-
-        public static ILinearAlgebraProvider CreateNativeCUDA()
-        {
-            return new Cuda.CudaLinearAlgebraProvider(GetCombinedHintPath());
-        }
-
-        public static void UseNativeCUDA()
-        {
-            Provider = CreateNativeCUDA();
-        }
-
-        public static bool TryUseNativeCUDA()
-        {
-            return TryUse(CreateNativeCUDA());
-        }
-
-        public static ILinearAlgebraProvider CreateNativeOpenBLAS()
-        {
-            return new OpenBlas.OpenBlasLinearAlgebraProvider(GetCombinedHintPath());
-        }
-
-        public static void UseNativeOpenBLAS()
-        {
-            Provider = CreateNativeOpenBLAS();
-        }
-
-        public static bool TryUseNativeOpenBLAS()
-        {
-            return TryUse(CreateNativeOpenBLAS());
-        }
-
-        /// <summary>
-        /// Try to use a native provider, if available.
-        /// </summary>
-        public static bool TryUseNative()
-        {
-            return TryUseNativeCUDA() || TryUseNativeMKL() || TryUseNativeOpenBLAS();
-        }
-#endif
-
         static bool TryUse(ILinearAlgebraProvider provider)
         {
             try
@@ -188,14 +121,7 @@ namespace MathNet.Numerics.Providers.LinearAlgebra
         /// </summary>
         public static void UseBest()
         {
-#if NATIVE
-            if (!TryUseNative())
-            {
-                UseManaged();
-            }
-#else
             UseManaged();
-#endif
         }
 
         /// <summary>
@@ -205,29 +131,7 @@ namespace MathNet.Numerics.Providers.LinearAlgebra
         /// </summary>
         public static void UseDefault()
         {
-#if NATIVE
-            var value = Environment.GetEnvironmentVariable(EnvVarLAProvider);
-            switch (value != null ? value.ToUpperInvariant() : string.Empty)
-            {
-                case "MKL":
-                    UseNativeMKL();
-                    break;
-
-                case "CUDA":
-                    UseNativeCUDA();
-                    break;
-
-                case "OPENBLAS":
-                    UseNativeOpenBLAS();
-                    break;
-
-                default:
-                    UseBest();
-                    break;
-            }
-#else
             UseBest();
-#endif
         }
 
         public static void FreeResources()
