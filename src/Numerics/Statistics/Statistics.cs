@@ -38,33 +38,6 @@ namespace MathNet.Numerics.Statistics
     public static class Statistics
     {
         /// <summary>
-        /// Returns the minimum value in the sample data.
-        /// Returns NaN if data is empty or if any entry is NaN.
-        /// </summary>
-        /// <param name="data">The sample data.</param>
-        /// <returns>The minimum value in the sample data.</returns>
-        public static double Minimum(this IEnumerable<double> data)
-        {
-            return data is double[] array
-                ? ArrayStatistics.Minimum(array)
-                : StreamingStatistics.Minimum(data);
-        }
-
-
-        /// <summary>
-        /// Returns the maximum value in the sample data.
-        /// Returns NaN if data is empty or if any entry is NaN.
-        /// </summary>
-        /// <param name="data">The sample data.</param>
-        /// <returns>The maximum value in the sample data.</returns>
-        public static double Maximum(this IEnumerable<double> data)
-        {
-            return data is double[] array
-                ? ArrayStatistics.Maximum(array)
-                : StreamingStatistics.Maximum(data);
-        }
-
-        /// <summary>
         /// Estimates the sample mean and the unbiased population standard deviation from the provided samples.
         /// On a dataset of size N will use an N-1 normalizer (Bessel's correction).
         /// Returns NaN for mean if data is empty or if any entry is NaN and NaN for standard deviation if data has less than two entries or if any entry is NaN.
